@@ -38,7 +38,7 @@ public class DateAnnotator {
             List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
             annotations.add(new TimeAnnotation(tokens.get(0).get(CoreAnnotations.TokenBeginAnnotation.class),
                     tokens.get(tokens.size() - 1).get(CoreAnnotations.TokenEndAnnotation.class),
-                    cm.get(TimeExpression.Annotation.class).getTemporal()));
+                    cm.get(TimeAnnotations.TimexAnnotation.class)));
         }
         return annotations;
     }
