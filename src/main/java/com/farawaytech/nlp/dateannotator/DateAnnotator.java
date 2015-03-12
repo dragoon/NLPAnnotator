@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
+import com.farawaytech.nlp.NLPAnnotators;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
@@ -22,13 +22,11 @@ public class DateAnnotator {
             date = dateFormat.format(new Date());
         }
 
-
-        Properties props = new Properties();
         AnnotationPipeline pipeline = new AnnotationPipeline();
-        pipeline.addAnnotator(new TokenizerAnnotator(false, TokenizerAnnotator.TokenizerType.Whitespace));
-        pipeline.addAnnotator(new WordsToSentencesAnnotator(false));
-        pipeline.addAnnotator(new POSTaggerAnnotator(false));
-        pipeline.addAnnotator(new TimeAnnotator("sutime", props));
+        pipeline.addAnnotator(NLPAnnotators.WHITESPACE_TOKENIZER);
+        pipeline.addAnnotator(NLPAnnotators.W2S_ANNOTATOR);
+        pipeline.addAnnotator(NLPAnnotators.POS_ANNOTATOR);
+        pipeline.addAnnotator(NLPAnnotators.TIME_ANNOTATOR);
 
         Annotation annotation = new Annotation(sentence);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, date);
