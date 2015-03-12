@@ -32,7 +32,7 @@ public class DateAnnotatorServiceImpl implements DateAnnotatorService.Iface {
         for (TimeAnnotation annotation: result) {
             response.add(new TTimeAnnotation(String.valueOf(annotation.startToken),
                     String.valueOf(annotation.endToken),
-                    annotation.resolvedTemporal.toString()));
+                    annotation.timex.toString()));
         }
         return new TAnnotationResponse(response);
     }//runIndexSearch
