@@ -1,10 +1,15 @@
 package com.farawaytech.nlp.dateannotator;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.farawaytech.nlp.NLPAnnotators;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -42,5 +47,24 @@ public class DateAnnotator {
         }
         return annotations;
     }
+
+//    public static void main(String[] args) {
+//        try {
+//            readStreamOfLinesUsingFilesWithTryBlock();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private static void readStreamOfLinesUsingFilesWithTryBlock() throws IOException
+//    {
+//        Path path = Paths.get("/Users/dragoon/Downloads", "wiki_small.txt");
+//        //The stream hence file will also be closed here
+//        System.out.println(new Date());
+//        try(Stream<String> lines = Files.lines(path)){
+//            lines.forEach(s -> annotate(s, null));
+//        }
+//        System.out.println(new Date());
+//    }
 
 }
