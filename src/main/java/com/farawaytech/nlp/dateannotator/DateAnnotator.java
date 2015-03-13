@@ -27,15 +27,9 @@ public class DateAnnotator {
             date = dateFormat.format(new Date());
         }
 
-        AnnotationPipeline pipeline = new AnnotationPipeline();
-        pipeline.addAnnotator(NLPAnnotators.WHITESPACE_TOKENIZER);
-        pipeline.addAnnotator(NLPAnnotators.W2S_ANNOTATOR);
-        pipeline.addAnnotator(NLPAnnotators.POS_ANNOTATOR);
-        pipeline.addAnnotator(NLPAnnotators.TIME_ANNOTATOR);
-
         Annotation annotation = new Annotation(sentence);
         annotation.set(CoreAnnotations.DocDateAnnotation.class, date);
-        pipeline.annotate(annotation);
+        NLPAnnotators.dateAnnotationPipeline.annotate(annotation);
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 
         List<TimeAnnotation> annotations = new ArrayList<>();
