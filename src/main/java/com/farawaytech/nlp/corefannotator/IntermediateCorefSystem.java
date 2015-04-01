@@ -28,6 +28,7 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
         header.add("START_INDEX");
         header.add("END_INDEX");
         header.add("MENTION");
+        header.add("NER_ENTITY");
         header.add("COREF_ID");
         lines.add(header.toString());
         try {
@@ -44,15 +45,24 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
         List<String> lines = new ArrayList<>();
         for (Map.Entry<Integer, CorefChain> entry: corefChains.entrySet()) {
             CorefChain chain = entry.getValue();
+            CorefCluster corefCluster = document.corefClusters.get(chain.getChainID());
+
+            // Store hashmap of mentionID -> to resolve NER string
+            Map<Integer, Mention> mentionMap = new HashMap<>();
+            for (Mention mention: corefCluster.getCorefMentions()) {
+                mentionMap.put(mention.mentionID, mention);
+            }
 
             List<CorefChain.CorefMention> mentions = chain.getMentionsInTextualOrder();
             for (CorefChain.CorefMention mention: mentions) {
                 StringJoiner line = new StringJoiner("\t");
                 line.add(document.conllDoc.getDocumentID());
+                line.add(document.conllDoc.getPartNo());
                 line.add(String.valueOf(mention.sentNum));
                 line.add(String.valueOf(mention.startIndex));
                 line.add(String.valueOf(mention.endIndex));
                 line.add(mention.mentionSpan);
+                line.add(mentionMap.get(mention.mentionID).nerString);
                 line.add(String.valueOf(entry.getKey()));
                 lines.add(line.toString());
             }
