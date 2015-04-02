@@ -24,6 +24,7 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
         // header
         StringJoiner header = new StringJoiner("\t");
         header.add("DOC_ID");
+        header.add("PARAGRAPH_ID");
         header.add("SENT_ID");
         header.add("START_INDEX");
         header.add("END_INDEX");
