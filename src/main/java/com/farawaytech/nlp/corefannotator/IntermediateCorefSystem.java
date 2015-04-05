@@ -30,6 +30,7 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
         header.add("END_INDEX");
         header.add("MENTION");
         header.add("NER_ENTITY");
+        header.add("HEAD_WORD");
         header.add("COREF_ID");
         lines.add(header.toString());
         try {
@@ -64,6 +65,7 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
                 line.add(String.valueOf(mention.endIndex));
                 line.add(mention.mentionSpan);
                 line.add(mentionMap.get(mention.mentionID).nerString);
+                line.add(mentionMap.get(mention.mentionID).headString);
                 line.add(String.valueOf(entry.getKey()));
                 lines.add(line.toString());
             }
