@@ -5,9 +5,13 @@ import edu.stanford.nlp.dcoref.*;
 import edu.stanford.nlp.pipeline.DefaultPaths;
 import edu.stanford.nlp.util.StringUtils;
 import edu.stanford.nlp.util.logging.NewlineLogFormatter;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -30,8 +34,10 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
         header.add("END_INDEX");
         header.add("MENTION");
         header.add("NER_ENTITY");
-        header.add("HEAD_WORD");
+        header.add("HEAD_WORD_LEMMA");
+        header.add("HEAD_POS_TAG");
         header.add("COREF_ID");
+        header.add("W2V_TYPES");
         lines.add(header.toString());
         try {
             Files.write(Paths.get("corefs.txt"), lines, StandardCharsets.UTF_8,
@@ -45,18 +51,32 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
     public Map<Integer, CorefChain> coref(Document document) throws Exception {
         Map<Integer, CorefChain> corefChains = super.coref(document);
         List<String> lines = new ArrayList<>();
-        for (Map.Entry<Integer, CorefChain> entry: corefChains.entrySet()) {
+        for (Map.Entry<Integer, CorefChain> entry : corefChains.entrySet()) {
             CorefChain chain = entry.getValue();
             CorefCluster corefCluster = document.corefClusters.get(chain.getChainID());
 
             // Store hashmap of mentionID -> to resolve NER string
             Map<Integer, Mention> mentionMap = new HashMap<>();
-            for (Mention mention: corefCluster.getCorefMentions()) {
+            for (Mention mention : corefCluster.getCorefMentions()) {
                 mentionMap.put(mention.mentionID, mention);
             }
 
             List<CorefChain.CorefMention> mentions = chain.getMentionsInTextualOrder();
-            for (CorefChain.CorefMention mention: mentions) {
+            for (CorefChain.CorefMention mention : mentions) {
+                Mention mention1 = mentionMap.get(mention.mentionID);
+                String posHeadTag = "NULL";
+                try {
+                    posHeadTag = mention1.headIndexedWord.toString().split("/")[1];
+                } catch (NullPointerException ignored) {
+                }
+
+                String resolvedTypes = "NULL";
+                if (posHeadTag.startsWith("NN") && mention1.nerString.equals("O"))
+                    try {
+                        resolvedTypes = String.join(",", getTypesForNgram(mention1.headIndexedWord.lemma()));
+                    }
+                    catch (IOException ignored) {}
+
                 StringJoiner line = new StringJoiner("\t");
                 line.add(document.conllDoc.getDocumentID());
                 line.add(document.conllDoc.getPartNo());
@@ -64,9 +84,11 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
                 line.add(String.valueOf(mention.startIndex));
                 line.add(String.valueOf(mention.endIndex));
                 line.add(mention.mentionSpan);
-                line.add(mentionMap.get(mention.mentionID).nerString);
-                line.add(mentionMap.get(mention.mentionID).headString);
+                line.add(mention1.nerString);
+                line.add(mention1.headIndexedWord.lemma());
+                line.add(posHeadTag);
                 line.add(String.valueOf(entry.getKey()));
+                line.add(resolvedTypes);
                 lines.add(line.toString());
             }
         }
@@ -79,7 +101,9 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
         return corefChains;
     }
 
-    /** Returns the name of the log file that this method writes. */
+    /**
+     * Returns the name of the log file that this method writes.
+     */
     public static String initializeAndRunCoref(Properties props) throws Exception {
         String timeStamp = Calendar.getInstance().getTime().toString().replaceAll("\\s", "-").replaceAll(":", "-");
         LogisticClassifier<String, String> singletonPredictor = getSingletonPredictorFromSerializedFile(props.getProperty(Constants.SINGLETON_MODEL_PROP, DefaultPaths.DEFAULT_DCOREF_SINGLETON_MODEL));
@@ -89,9 +113,9 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
         //
         String logFileName = props.getProperty(Constants.LOG_PROP, "log.txt");
         if (logFileName.endsWith(".txt")) {
-            logFileName = logFileName.substring(0, logFileName.length()-4) +"_"+ timeStamp+".txt";
+            logFileName = logFileName.substring(0, logFileName.length() - 4) + "_" + timeStamp + ".txt";
         } else {
-            logFileName = logFileName + "_"+ timeStamp+".txt";
+            logFileName = logFileName + "_" + timeStamp + ".txt";
         }
         try {
             FileHandler fh = new FileHandler(logFileName, false);
@@ -111,7 +135,7 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
             mentionExtractor = new CoNLLMentionExtractor(corefSystem.dictionaries(), props,
                     corefSystem.semantics(), singletonPredictor);
         }
-        if(mentionExtractor == null){
+        if (mentionExtractor == null) {
             throw new RuntimeException("No input file specified!");
         }
         // Set mention finder
@@ -140,6 +164,25 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
             logger.log(Level.SEVERE, "ERROR in running coreference", ex);
         }
         return logFileName;
+    }
+
+    public static List<String> getTypesForNgram(String ngram) throws IOException, JSONException {
+        List<String> types = new ArrayList<>();
+        URL url = new URL("http://diufpc54:5000/predict/types/word?ngram=" + ngram);
+        Scanner scan = new Scanner(url.openStream());
+        String str = "";
+        while (scan.hasNext())
+            str += scan.nextLine();
+        scan.close();
+
+        JSONObject obj = new JSONObject(str);
+        JSONArray results = obj.getJSONArray("types");
+        for (int i=0; i<results.length(); i++) {
+            String type = results.getJSONArray(i).getString(0);
+            String similarity = results.getJSONArray(i).getString(1);
+            types.add(type);
+        }
+        return types;
     }
 
     public static void main(String[] args) throws Exception {
