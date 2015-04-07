@@ -65,15 +65,23 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
             for (CorefChain.CorefMention mention : mentions) {
                 Mention mention1 = mentionMap.get(mention.mentionID);
                 String posHeadTag = "NULL";
+                String lemma;
+                try {
+                    lemma = mention1.headIndexedWord.lemma();
+                }
+                catch (NullPointerException e) {
+                    lemma = mention1.headString;
+                }
+
                 try {
                     posHeadTag = mention1.headIndexedWord.toString().split("/")[1];
                 } catch (NullPointerException ignored) {
                 }
 
                 String resolvedTypes = "NULL";
-                if (posHeadTag.startsWith("NN") && mention1.nerString.equals("O"))
+                if (posHeadTag.startsWith("NN") && mention1.nerString.equals("O") && !lemma.isEmpty())
                     try {
-                        resolvedTypes = String.join(",", getTypesForNgram(mention1.headIndexedWord.lemma()));
+                        resolvedTypes = String.join(",", getTypesForNgram(lemma));
                     }
                     catch (IOException ignored) {}
 
@@ -85,7 +93,7 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
                 line.add(String.valueOf(mention.endIndex));
                 line.add(mention.mentionSpan);
                 line.add(mention1.nerString);
-                line.add(mention1.headIndexedWord.lemma());
+                line.add(lemma);
                 line.add(posHeadTag);
                 line.add(String.valueOf(entry.getKey()));
                 line.add(resolvedTypes);
