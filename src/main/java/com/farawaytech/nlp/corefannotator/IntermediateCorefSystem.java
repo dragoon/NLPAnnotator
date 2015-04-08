@@ -51,39 +51,30 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
     public Map<Integer, CorefChain> coref(Document document) throws Exception {
         Map<Integer, CorefChain> corefChains = super.coref(document);
         List<String> lines = new ArrayList<>();
-        for (Map.Entry<Integer, CorefChain> entry : corefChains.entrySet()) {
-            CorefChain chain = entry.getValue();
-            CorefCluster corefCluster = document.corefClusters.get(chain.getChainID());
+        List<List<Mention>> orderedMentions = filterMentionsWithSingletonClusters(document, document.predictedOrderedMentionsBySentence);
+        for (List<Mention> mentionCluster: orderedMentions) {
 
-            // Store hashmap of mentionID -> to resolve NER string
-            Map<Integer, Mention> mentionMap = new HashMap<>();
-            for (Mention mention : corefCluster.getCorefMentions()) {
-                mentionMap.put(mention.mentionID, mention);
-            }
-
-            List<CorefChain.CorefMention> mentions = chain.getMentionsInTextualOrder();
-            for (CorefChain.CorefMention mention : mentions) {
-                Mention mention1 = mentionMap.get(mention.mentionID);
+            for (Mention mention : mentionCluster) {
                 String posHeadTag = "NULL";
                 String lemma;
                 try {
-                    lemma = mention1.headIndexedWord.lemma();
+                    lemma = mention.headIndexedWord.lemma();
                 }
                 catch (NullPointerException e) {
-                    lemma = mention1.headString;
+                    lemma = mention.headString;
                 }
 
                 try {
-                    posHeadTag = mention1.headIndexedWord.toString().split("/")[1];
+                    posHeadTag = mention.headIndexedWord.toString().split("/")[1];
                 } catch (NullPointerException ignored) {
                 }
 
                 String resolvedTypes = "NULL";
-                if (posHeadTag.startsWith("NN") && mention1.nerString.equals("O") && !lemma.isEmpty())
+                if (posHeadTag.startsWith("NN") && mention.nerString.equals("O") && !lemma.isEmpty())
                     try {
                         resolvedTypes = String.join(",", getTypesForNgram(lemma));
                     }
-                    catch (IOException ignored) {}
+                    catch (Exception ignored) {}
 
                 StringJoiner line = new StringJoiner("\t");
                 line.add(document.conllDoc.getDocumentID());
@@ -91,11 +82,11 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
                 line.add(String.valueOf(mention.sentNum));
                 line.add(String.valueOf(mention.startIndex));
                 line.add(String.valueOf(mention.endIndex));
-                line.add(mention.mentionSpan);
-                line.add(mention1.nerString);
+                line.add(mention.spanToString());
+                line.add(mention.nerString);
                 line.add(lemma);
                 line.add(posHeadTag);
-                line.add(String.valueOf(entry.getKey()));
+                line.add(String.valueOf(mention.corefClusterID));
                 line.add(resolvedTypes);
                 lines.add(line.toString());
             }
@@ -128,7 +119,7 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
         try {
             FileHandler fh = new FileHandler(logFileName, false);
             logger.addHandler(fh);
-            logger.setLevel(Level.WARNING);
+            logger.setLevel(Level.FINE);
             fh.setFormatter(new NewlineLogFormatter());
         } catch (SecurityException | IOException e) {
             System.err.println("ERROR: cannot initialize logger!");
