@@ -1,15 +1,8 @@
 package com.farawaytech.nlp.dateannotator;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
 
 import com.farawaytech.nlp.NLPAnnotators;
 import com.sun.istack.internal.Nullable;
@@ -60,23 +53,22 @@ public class DateAnnotator {
 
     }
 
-//    public static void main(String[] args) {
-//        try {
-//            readStreamOfLinesUsingFilesWithTryBlock();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private static void readStreamOfLinesUsingFilesWithTryBlock() throws IOException
-//    {
-//        Path path = Paths.get("/Users/dragoon/Downloads", "wiki_small.txt");
-//        //The stream hence file will also be closed here
-//        System.out.println(new Date());
-//        try(Stream<String> lines = Files.lines(path)){
-//            lines.forEach(s -> annotate(s, null));
-//        }
-//        System.out.println(new Date());
-//    }
+    /**
+     * Annotates sentence with TIMEX3 annotations, for relative dates, date is set to TODAY.
+     * @param sentence - the sentence to be annotated
+     * @return sentences annotated with TIMEX3 annotations
+     */
+    public static String annotateInline(String sentence, String date) {
+        List<String> tokens = new ArrayList<>(Arrays.asList(sentence.split(" ")));
+        List<TimeAnnotation> annotations = annotate(sentence, date);
+        for (TimeAnnotation annotation: annotations) {
+            String token = TimeClass.getTimeClass(annotation.timex);
+            for (int i=annotation.startToken+1; i<annotation.endToken; i++)
+                tokens.set(i, null);
+            tokens.set(annotation.startToken, token);
+        }
+        tokens.removeAll(Collections.singleton(null));
+        return String.join(" ", tokens);
+    }
 
 }

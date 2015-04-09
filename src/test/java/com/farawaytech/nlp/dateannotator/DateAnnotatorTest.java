@@ -29,4 +29,10 @@ public class DateAnnotatorTest {
         annotationList = DateAnnotator.annotate("It is 11:30pm .", null);
         assertEquals(annotationList.get(0).timex.toString(), "<TIMEX3 tid=\"t1\" type=\"TIME\" value=\"T23:30\">11:30pm</TIMEX3>");
     }
+
+    @Test
+    public void testAnnotateInline() throws Exception {
+        String annotation = DateAnnotator.annotateInline("Three interesting dates are 18 Feb 1997 , the 20th of july and 4 days from today .", null);
+        assertEquals(annotation, "");
+    }
 }
