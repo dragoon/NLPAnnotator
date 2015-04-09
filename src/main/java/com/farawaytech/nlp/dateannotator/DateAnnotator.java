@@ -35,7 +35,8 @@ public class DateAnnotator {
             List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
             annotations.add(new TimeAnnotation(tokens.get(0).get(CoreAnnotations.TokenBeginAnnotation.class),
                     tokens.get(tokens.size() - 1).get(CoreAnnotations.TokenEndAnnotation.class),
-                    cm.get(TimeAnnotations.TimexAnnotation.class)));
+                    cm.get(TimeAnnotations.TimexAnnotation.class),
+                    cm.get(TimeExpression.Annotation.class).getTemporal()));
         }
         return annotations;
     }
@@ -62,7 +63,7 @@ public class DateAnnotator {
         List<String> tokens = new ArrayList<>(Arrays.asList(sentence.split(" ")));
         List<TimeAnnotation> annotations = annotate(sentence, date);
         for (TimeAnnotation annotation: annotations) {
-            String token = TimeClass.getTimeClass(annotation.timex);
+            String token = TimeClass.getTimeClass(annotation.temporal);
             for (int i=annotation.startToken+1; i<annotation.endToken; i++)
                 tokens.set(i, null);
             tokens.set(annotation.startToken, token);

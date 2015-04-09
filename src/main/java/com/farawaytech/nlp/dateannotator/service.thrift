@@ -15,8 +15,13 @@ struct TAnnotationResponse {
 service DateAnnotatorService {
 
 	/** Extracts date annotations from a given sentence/string.
-	* ranking function. The sentence has to be already properly tokenized, only whitespace split will be applied.
+	* The sentence has to be already properly tokenized, only whitespace split will be applied.
 	* Date argument is required for relative dates, otheriwise current date will be applied.
 	*/
 	TAnnotationResponse annotate(1:string sentence, 2:string date),
+
+	/**
+	* Performs inline datetime annotations on a given sentence.
+	**/
+	string annotateInline(1:string sentence, 2:string date),
 }
