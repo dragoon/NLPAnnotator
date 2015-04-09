@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.farawaytech.nlp.NLPAnnotators;
+import com.sun.istack.internal.Nullable;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
@@ -20,15 +21,19 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class DateAnnotator {
 
-    public static List<TimeAnnotation> annotate(String sentence, String date) {
-        // set date to today if null
-        if (date == null) {
-            DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
-            date = dateFormat.format(new Date());
+    /**
+     * Annotates sentence with TIMEX3 annotations
+     * @param sentence - the sentence to be annotated
+     * @param date - date of the document, to resolve relative dates, can be {@code null}.
+     * @return sentences annotated with TIMEX3 annotations
+     */
+    public static List<TimeAnnotation> annotate(String sentence, @Nullable String date) {
+        Annotation annotation = new Annotation(sentence);
+
+        if (date != null) {
+            annotation.set(CoreAnnotations.DocDateAnnotation.class, date);
         }
 
-        Annotation annotation = new Annotation(sentence);
-        annotation.set(CoreAnnotations.DocDateAnnotation.class, date);
         NLPAnnotators.dateAnnotationPipeline.annotate(annotation);
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 
@@ -40,6 +45,19 @@ public class DateAnnotator {
                     cm.get(TimeAnnotations.TimexAnnotation.class)));
         }
         return annotations;
+    }
+
+    /**
+     * Annotates sentence with TIMEX3 annotations, for relative dates, date is set to TODAY.
+     * @param sentence - the sentence to be annotated
+     * @return sentences annotated with TIMEX3 annotations
+     */
+    public static List<TimeAnnotation> annotate(String sentence) {
+        // set date to today if null
+        DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        String date = dateFormat.format(new Date());
+        return annotate(sentence, date);
+
     }
 
 //    public static void main(String[] args) {
