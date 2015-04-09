@@ -126,6 +126,8 @@ public class IntermediateCorefSystem extends SieveCoreferenceSystem {
             throw e;
         }
 
+        Constants.printConstants(logger);
+
         // initialize coref system
         SieveCoreferenceSystem corefSystem = new IntermediateCorefSystem(props);
 
