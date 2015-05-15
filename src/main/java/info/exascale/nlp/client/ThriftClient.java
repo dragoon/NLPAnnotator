@@ -1,4 +1,4 @@
-package com.farawaytech.nlp.client;
+package info.exascale.nlp.client;
 
 import com.farawaytech.nlp.dateannotator.thrift.DateAnnotatorService;
 import com.farawaytech.nlp.dateannotator.thrift.TAnnotationResponse;

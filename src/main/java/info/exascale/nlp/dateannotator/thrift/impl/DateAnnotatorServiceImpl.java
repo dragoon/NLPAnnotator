@@ -1,4 +1,4 @@
-package com.farawaytech.nlp.dateannotator.thrift.impl;
+package info.exascale.nlp.dateannotator.thrift.impl;
 
 import java.util.ArrayList;
 import java.util.List;

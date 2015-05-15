@@ -1,4 +1,4 @@
-package com.farawaytech.nlp.dateannotator;
+package info.exascale.nlp.dateannotator;
 
 import edu.stanford.nlp.time.SUTime;
 

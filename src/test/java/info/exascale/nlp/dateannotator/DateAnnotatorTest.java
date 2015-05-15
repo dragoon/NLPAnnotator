@@ -1,4 +1,4 @@
-package com.farawaytech.nlp.dateannotator;
+package info.exascale.nlp.dateannotator;
 
 import org.junit.Test;
 import java.util.List;

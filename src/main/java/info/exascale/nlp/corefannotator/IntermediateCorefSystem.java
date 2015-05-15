@@ -1,4 +1,4 @@
-package com.farawaytech.nlp.corefannotator;
+package info.exascale.nlp.corefannotator;
 
 import edu.stanford.nlp.classify.LogisticClassifier;
 import edu.stanford.nlp.dcoref.*;

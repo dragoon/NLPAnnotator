@@ -1,4 +1,4 @@
-package com.farawaytech.nlp.dateannotator;
+package info.exascale.nlp.dateannotator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

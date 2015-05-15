@@ -1,4 +1,4 @@
-package com.farawaytech.nlp.server;
+package info.exascale.nlp.server;
 
 import com.farawaytech.nlp.dateannotator.thrift.DateAnnotatorService;
 import com.farawaytech.nlp.dateannotator.thrift.impl.DateAnnotatorServiceImpl;

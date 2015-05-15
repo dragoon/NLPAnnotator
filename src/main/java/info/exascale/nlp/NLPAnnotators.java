@@ -1,4 +1,4 @@
-package com.farawaytech.nlp;
+package info.exascale.nlp;
 
 import edu.stanford.nlp.dcoref.Constants;
 import edu.stanford.nlp.pipeline.*;
