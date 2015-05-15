@@ -1,7 +1,7 @@
 import sys
 
-from . import DateAnnotatorService
-from .ttypes import *
+import DateAnnotatorService
+from ttypes import *
 
 from thrift import Thrift
 from thrift.transport import THttpClient
