@@ -5,12 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import info.exascale.nlp.NLPAnnotators;
-import com.sun.istack.internal.Nullable;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.time.*;
 import edu.stanford.nlp.util.CoreMap;
+
+import javax.annotation.Nullable;
 
 public class DateAnnotator {
 
