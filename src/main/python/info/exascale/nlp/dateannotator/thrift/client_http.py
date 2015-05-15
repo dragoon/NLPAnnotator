@@ -5,14 +5,11 @@ from ttypes import *
 
 from thrift import Thrift
 from thrift.transport import THttpClient
-#from thrift.transport import TTransport
 from thrift.protocol import TCompactProtocol
 
 try:
 
     transport = THttpClient.THttpClient("http://srv.exascale.info:8080/NLPAnnotator/dateannotation")
-    # Buffering is critical. Raw sockets are very slow
-    #transport = TTransport.TBufferedTransport(transport)
     protocol = TCompactProtocol.TCompactProtocol(transport)
     client = DateAnnotatorService.Client(protocol)
     # Connect!
