@@ -3,11 +3,11 @@ package info.exascale.nlp.dateannotator.thrift.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.farawaytech.nlp.dateannotator.DateAnnotator;
-import com.farawaytech.nlp.dateannotator.TimeAnnotation;
-import com.farawaytech.nlp.dateannotator.thrift.DateAnnotatorService;
-import com.farawaytech.nlp.dateannotator.thrift.TAnnotationResponse;
-import com.farawaytech.nlp.dateannotator.thrift.TTimeAnnotation;
+import info.exascale.nlp.dateannotator.DateAnnotator;
+import info.exascale.nlp.dateannotator.TimeAnnotation;
+import info.exascale.nlp.dateannotator.thrift.DateAnnotatorService;
+import info.exascale.nlp.dateannotator.thrift.TAnnotationResponse;
+import info.exascale.nlp.dateannotator.thrift.TTimeAnnotation;
 import org.apache.thrift.TException;
 
 

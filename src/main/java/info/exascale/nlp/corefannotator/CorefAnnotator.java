@@ -1,7 +1,7 @@
 package info.exascale.nlp.corefannotator;
 
 
-import com.farawaytech.nlp.NLPAnnotators;
+import info.exascale.nlp.NLPAnnotators;
 import edu.stanford.nlp.dcoref.CorefChain;
 import edu.stanford.nlp.dcoref.CorefCoreAnnotations;
 import edu.stanford.nlp.ling.CoreAnnotations;

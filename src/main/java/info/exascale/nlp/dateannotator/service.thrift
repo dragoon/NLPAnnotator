@@ -1,4 +1,4 @@
-namespace * com.farawaytech.nlp.dateannotator.thrift
+namespace * info.exascale.nlp.dateannotator.thrift
 
 struct TTimeAnnotation {
 	1: required string startToken

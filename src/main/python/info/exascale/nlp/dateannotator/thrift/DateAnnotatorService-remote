@@ -16,8 +16,8 @@ from thrift.transport import TSSLSocket
 from thrift.transport import THttpClient
 from thrift.protocol import TBinaryProtocol
 
-from com.farawaytech.nlp.dateannotator.thrift import DateAnnotatorService
-from com.farawaytech.nlp.dateannotator.thrift.ttypes import *
+from info.exascale.nlp.dateannotator.thrift import DateAnnotatorService
+from info.exascale.nlp.dateannotator.thrift.ttypes import *
 
 if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('')

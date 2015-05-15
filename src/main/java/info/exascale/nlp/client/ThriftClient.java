@@ -1,8 +1,8 @@
 package info.exascale.nlp.client;
 
-import com.farawaytech.nlp.dateannotator.thrift.DateAnnotatorService;
-import com.farawaytech.nlp.dateannotator.thrift.TAnnotationResponse;
-import com.farawaytech.nlp.dateannotator.thrift.TTimeAnnotation;
+import info.exascale.nlp.dateannotator.thrift.DateAnnotatorService;
+import info.exascale.nlp.dateannotator.thrift.TAnnotationResponse;
+import info.exascale.nlp.dateannotator.thrift.TTimeAnnotation;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.transport.THttpClient;

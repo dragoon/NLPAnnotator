@@ -4,7 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.farawaytech.nlp.NLPAnnotators;
+import info.exascale.nlp.NLPAnnotators;
 import com.sun.istack.internal.Nullable;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;

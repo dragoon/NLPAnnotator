@@ -1,7 +1,7 @@
 package info.exascale.nlp.servlet;
 
-import com.farawaytech.nlp.dateannotator.thrift.DateAnnotatorService;
-import com.farawaytech.nlp.dateannotator.thrift.impl.DateAnnotatorServiceImpl;
+import info.exascale.nlp.dateannotator.thrift.DateAnnotatorService;
+import info.exascale.nlp.dateannotator.thrift.impl.DateAnnotatorServiceImpl;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.TServlet;
 
