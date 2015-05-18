@@ -3,6 +3,14 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 version = '1.0'
 
+task execute(type:JavaExec) {
+    main = 'info.exascale.nlp.server.Server'
+    classpath = sourceSets.main.runtimeClasspath
+    if ( project.hasProperty("port") ) {
+        args Eval.me(port)
+    }
+}
+
 repositories {
     mavenCentral()
 }
