@@ -20,7 +20,7 @@ try:
 
     for line in sys.stdin:
         sentence = line.strip()
-        response = client.annotate(sentence, None)
+        response = client.annotate(sentence.decode('utf-8'), None)
         for time_annotation in response.annotations:
             print time_annotation.startToken
             print time_annotation.endToken
